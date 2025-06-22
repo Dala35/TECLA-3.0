@@ -1,85 +1,69 @@
 <!DOCTYPE html><html lang="pt">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>TECLA 3.0 – Expressão Bioemocional</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <link rel="manifest" href="manifest.json">
   <style>
-    .pulse {
-      animation: pulse 2s infinite;
+    body {
+      font-family: sans-serif;
+      background-color: #fdf6ec;
+      margin: 0;
+      padding: 0;
     }
-    @keyframes pulse {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.05); }
-      100% { transform: scale(1); }
+    h1 {
+      text-align: center;
+      background-color: #000;
+      color: #fff;
+      padding: 1rem;
+      margin: 0;
     }
+    section {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 10px;
+      padding: 1rem;
+    }
+    button {
+      padding: 2rem;
+      border: none;
+      border-radius: 1rem;
+      font-size: 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      transition: transform 0.2s;
+    }
+    button:hover {
+      transform: scale(1.05);
+    }
+    audio { display: none; }
   </style>
 </head>
-<body class="bg-gray-100 min-h-screen flex flex-col items-center p-4">
-  <h1 class="text-2xl font-bold text-center mb-4">🧠 TECLA 3.0 – Comunicação Bioemocional</h1>
-  <div class="mb-4">
-    <label for="idioma" class="block text-sm font-semibold">🌐 Idioma:</label>
-    <select id="idioma" class="p-2 border rounded">
-      <option value="pt">Português</option>
-      <option value="en">English</option>
-      <option value="ck">Cokwe</option>
-    </select>
-  </div>  <section class="grid grid-cols-2 sm:grid-cols-3 gap-4 text-center w-full max-w-xl">
-    <button onclick="falar('falar')" class="bg-yellow-200 p-4 rounded-xl pulse">🎤 <span class="txt">Falar</span></button>
-    <button onclick="falar('criar')" class="bg-green-200 p-4 rounded-xl">🎨 <span class="txt">Criar</span></button>
-    <button onclick="falar('música')" class="bg-blue-200 p-4 rounded-xl">🎵 <span class="txt">Música</span></button>
-    <button onclick="falar('comer')" class="bg-red-200 p-4 rounded-xl">🍲 <span class="txt">Comer</span></button>
-    <button onclick="falar('emoções')" class="bg-purple-200 p-4 rounded-xl">🤗 <span class="txt">Emoções</span></button>
-    <button onclick="falar('histórias')" class="bg-orange-200 p-4 rounded-xl">📖 <span class="txt">Histórias</span></button>
-  </section>  <script>
-    const frases = {
-      pt: {
-        falar: "Quero falar",
-        criar: "Quero criar",
-        música: "Quero ouvir música",
-        comer: "Estou com fome",
-        emoções: "Estou sentindo emoções",
-        histórias: "Quero ouvir uma história"
-      },
-      en: {
-        falar: "I want to speak",
-        criar: "I want to create",
-        música: "I want music",
-        comer: "I am hungry",
-        emoções: "I have feelings",
-        histórias: "I want a story"
-      },
-      ck: {
-        falar: "Nguli hinafeka",
-        criar: "Nguli kutila",
-        música: "Nguli ku yoka música",
-        comer: "Nguli nhi sala",
-        emoções: "Nguli nhikukwá",
-        histórias: "Nguli ku yoka citambi"
-      }
-    };
-
-    function falar(tipo) {
-      const idioma = document.getElementById('idioma').value;
-      const frase = frases[idioma][tipo];
-      const fala = new SpeechSynthesisUtterance(frase);
-      fala.lang = idioma === 'en' ? 'en-US' : idioma === 'ck' ? 'pt-AO' : 'pt-PT';
-      window.speechSynthesis.cancel();
-      window.speechSynthesis.speak(fala);
+<body>
+  <h1>TECLA 3.0 – Expressão Bioemocional</h1>
+  <section>
+    <button style="background-color:#ffe066" onclick="speak('Quero falar!')">🎤 Falar</button>
+    <button style="background-color:#baffc9" onclick="speak('Quero criar!')">🎨 Criar</button>
+    <button style="background-color:#bae1ff" onclick="speak('Quero música!')">🎵 Música</button>
+    <button style="background-color:#ffb3ba" onclick="speak('Estou com fome!')">🍲 Comer</button>
+    <button style="background-color:#d5b3ff" onclick="speak('Estou feliz!')">🤗 Emoções</button>
+    <button style="background-color:#ffd6a5" onclick="speak('Quero contar histórias!')">📖 Histórias</button>
+  </section>  <!-- Boas-vindas -->  <script>
+    const welcomeMessage = 'Olá! Sou Dala De Carvalho e este é o TECLA 3.0';
+    window.onload = () => {
+      speak(welcomeMessage);
+      const audio = new Audio('natureza.mp3');
+      audio.loop = true;
+      audio.volume = 0.3;
+      audio.play();
     }
 
-    // Adaptação com base em inatividade (exemplo: atenção visual)
-    let tempoInativo = 0;
-    setInterval(() => {
-      tempoInativo++;
-      if (tempoInativo > 10) {
-        document.querySelectorAll('button')[0].classList.add('pulse');
-      }
-    }, 1000);
-
-    document.body.addEventListener('click', () => {
-      tempoInativo = 0;
-      document.querySelectorAll('button')[0].classList.remove('pulse');
-    });
+    function speak(text) {
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.lang = 'pt-PT';
+      utter.pitch = 1.2;
+      utter.rate = 0.95;
+      speechSynthesis.speak(utter);
+    }
   </script></body>
 </html>
